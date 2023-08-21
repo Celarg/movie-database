@@ -1,0 +1,58 @@
+@use '../../styles/variables';
+
+.searchInput {
+  width: 30rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.7s ease-in-out;
+  position: absolute;
+
+  &[data-empty=false] {
+    top: 0;
+    left: 0;
+    transform: translate(0%, 0%);
+    width: 15rem;
+
+  }
+}
+
+.movieContainer {
+  margin-top: 4rem;
+  display: grid;
+  gap: 2rem;
+
+  @media only screen and (min-width: variables.$mq-md) {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+
+  .movieCard {
+    min-height: fit-content;
+    display: flex;
+    padding: 1rem 1rem;
+    width: 95%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    transition: scale 0.3s ease-in-out;
+
+    &:hover{
+      cursor: pointer;
+      scale: 1.05;
+    }
+
+    @media only screen and (min-width: variables.$mq-md) {
+      width: 100%;
+    }
+
+    img {
+      flex-shrink: 0;
+      border-radius: 4px;
+      overflow: hidden;
+      width: 132px;
+      //padding: 1rem 0;
+      margin: auto 0;
+      object-fit: contain;
+      height: 200px;
+    }
+  }
+}
