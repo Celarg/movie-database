@@ -30,9 +30,9 @@
 
 
   @media only screen and (min-width: variables.$mq-lg) {
-    width: 50%;
+    width: 70%;
     height: 80%;
-    max-width: 1200px;
+    max-width: 800px;
     max-height: 800px;
     padding: 2rem 0;
   }
@@ -80,6 +80,19 @@
       align-items: center;
       height: 24px;
     }
+  }
+
+  .metaScore {
+    background: green;
+    padding: 0.25rem;
+    text-align: center;
+    border-radius: 4px;
+  }
+
+  .favoriteAction{
+    cursor: pointer;
+    width: fit-content;
+    margin: auto 1rem auto 0;
   }
 
   h1 {
@@ -135,7 +148,11 @@
       padding: 0 0 0.5rem;
 
       &:last-child {
-        text-align: right;
+        p {
+          text-align: right;
+          font-weight: 600;
+          color: #FFF;
+        }
       }
 
     }

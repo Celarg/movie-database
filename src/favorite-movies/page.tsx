@@ -1,12 +1,13 @@
-import {Alert, Typography} from "@mui/material";
-import {useClientContext} from "@/lib/state/client-provider.tsx";
+import {Alert, Button, Typography} from "@mui/material";
+import {useClientContext} from "@/lib/context";
 import styles from './page.module.scss';
 import {cn} from "@/lib/helpers";
 import {Outlet, useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {MovieShort} from "@/types/movie.ts";
-import {FavoriteMovieCard, RemoveDialog} from "@/src/favorite-movie/components";
+import {FavoriteMovieCard, RemoveDialog} from "@/src/favorite-movies/components";
 import {ROUTES} from "@/lib/constants";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const FavoritePage = () => {
     const navigate = useNavigate();
@@ -21,10 +22,17 @@ const FavoritePage = () => {
         setRemovingMovie(movie);
     }
 
+    const goBack = () => {
+        navigate(ROUTES.MOVIE_SEARCH);
+    }
+
 
     return (
         <>
             <main style={{color: "#fff"}} className='container'>
+                <Button variant={"contained"} sx={{marginBottom: "1rem"}} startIcon={<ArrowBackIcon/>} onClick={goBack}>
+                    Go back to search
+                </Button>
                 <Typography variant={"h4"}>
                     Favorite Movies
                 </Typography>
@@ -34,9 +42,12 @@ const FavoritePage = () => {
 
                 <div className={cn(styles.favoriteMoviesContainer)}>
                     {favoriteMovies.map((movie) => (
-                        <FavoriteMovieCard key={movie.imdbID} movie={movie}
-                                           onClick={() => handleOnMovieClick(movie.imdbID)}
-                                           onRemove={() => handleOnRemove(movie)}/>
+                        <FavoriteMovieCard
+                            key={movie.imdbID}
+                            movie={movie}
+                            onClick={() => handleOnMovieClick(movie.imdbID)}
+                            onRemove={() => handleOnRemove(movie)}
+                        />
                     ))}
                 </div>
 

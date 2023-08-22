@@ -10,7 +10,7 @@ import {
     ThemeProvider
 } from "@mui/material";
 import {muiTheme} from "@/lib/configs";
-import {useClientContext} from "@/lib/state/client-provider.tsx";
+import {useClientContext} from "@/lib/context";
 import {MovieShort} from "@/types/movie.ts";
 import modalStyles from './styles.module.scss';
 

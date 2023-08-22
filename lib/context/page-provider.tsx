@@ -23,7 +23,7 @@ type PageProviderProps = {
     children: ReactNode;
 }
 
-const PageProvider = ({children}: PageProviderProps) => {
+export const PageProvider = ({children}: PageProviderProps) => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState('');
 

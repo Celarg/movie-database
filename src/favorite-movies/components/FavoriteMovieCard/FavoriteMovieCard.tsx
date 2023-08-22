@@ -40,12 +40,11 @@ export const FavoriteMovieCard = ({movie, onClick, onRemove}: FavoriteMovieCardP
                     <CardHeader title={movie.Title} sx={{paddingX: 0}}/>
                     <Grid sx={{
                         display: 'flex',
-                        gap: "1rem",
+                        gap: "1.5rem",
                         width: '100%',
                         height: "fit-content",
                         alignItems: "center",
-                        justifyContent: "space-between",
-                        marginTop: "auto"
+                        marginTop: "auto",
                     }}>
                         <Typography>{movie.Year}</Typography>
                         <MovieTypeBadge type={movie.Type}/>

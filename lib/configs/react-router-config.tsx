@@ -1,7 +1,7 @@
 import {createBrowserRouter} from "react-router-dom";
 import MovieSearchPage from "@/src/movie-search/page";
 import MovieDetailPage from "@/src/movie-quick-detail/page";
-import FavoritePage from "@/src/favorite-movie/page";
+import FavoritePage from "@/src/favorite-movies/page";
 import {ROUTES} from "@/lib/constants";
 
 export const router = createBrowserRouter([

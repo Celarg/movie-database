@@ -3,8 +3,7 @@ import {muiTheme, queryClientConfig, router} from "@/lib/configs";
 import {RouterProvider} from "react-router-dom";
 import {ReactNode} from "react";
 import {ThemeProvider} from "@mui/material";
-import {ClientContextProvider} from "@/lib/state/client-provider.tsx";
-import PageProvider from "@/lib/state/page-provider.tsx";
+import {ClientContextProvider, PageProvider} from "@/lib/context";
 
 type ProvidersProps = {
     children?: ReactNode;

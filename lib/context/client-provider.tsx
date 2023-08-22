@@ -18,16 +18,12 @@ type ClientContextProviderProps = {
 export const ClientContextProvider = ({children}:ClientContextProviderProps) => {
     const [favoriteMovies, setFavoriteMovies]=useLocalStorage<MovieShort[]>("favoriteMovies",[] );
 
-    const addFavoriteMovie = (newMovie:MovieShort) => {
-        setFavoriteMovies([...favoriteMovies, newMovie]);
-    }
-
     const removeFavoriteMovie = (imdbID:string) => {
         setFavoriteMovies(favoriteMovies.filter((movie) => movie.imdbID !== imdbID));
     }
 
     return (
-        <ClientContext.Provider value={{favoriteMovies, addFavoriteMovie, removeFavoriteMovie}}>
+        <ClientContext.Provider value={{favoriteMovies, addFavoriteMovie:(newMovie)=> setFavoriteMovies([...favoriteMovies, newMovie]), removeFavoriteMovie}}>
             {children}
         </ClientContext.Provider>
     )

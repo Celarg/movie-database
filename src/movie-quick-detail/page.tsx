@@ -7,42 +7,27 @@ import movieDetailStyles from './styles/movie-detail.module.scss';
 import StarRateIcon from '@mui/icons-material/StarRate';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import {useEffect, useState} from "react";
-import {useClientContext} from "@/lib/state/client-provider.tsx";
+import {useClientContext} from "@/lib/context/client-provider.tsx";
 import {useGetMovie} from "@/lib/queries/movie-get.ts";
 
-const sx = {color: "#FFD700", width: "2.5rem", height: "2.5rem", cursor: "pointer"}
+const sx = {color: "#FFD700", width: "2.5rem", height: "2.5rem", cursor: "pointer", padding:"0.5rem 0 0 0.5rem"}
 
 const MovieDetailPage = () => {
     const {id} = useParams();
-    const {addFavoriteMovie, favoriteMovies} = useClientContext()
-    const [isFavorite, setIsFavorite] = useState(false);
-
-    useEffect(() => {
-        if (!favoriteMovies) return;
-        setIsFavorite(favoriteMovies.some((favoriteMovie) => favoriteMovie.imdbID === id));
-    }, [favoriteMovies]);
-
+    const {addFavoriteMovie, favoriteMovies, removeFavoriteMovie} = useClientContext()
 
     const movieQuery = useGetMovie(id);
     const movie = movieQuery.data?.data;
 
+    const isFavorite = favoriteMovies.find((favMovie) => favMovie.imdbID === movie?.imdbID);
+
     const handleFavoriteAction = () => {
-        if (!movie) return;
-
-        setIsFavorite(prevState => {
-            if (!prevState) {
-                addFavoriteMovie({
-                    imdbID: movie?.imdbID,
-                    Title: movie?.Title,
-                    Poster: movie?.Poster,
-                    Type: movie?.Type,
-                    Year: movie?.Year
-                });
-            }
-            return !prevState
-        });
-
+        if(!movie) return;
+        if (isFavorite) {
+            removeFavoriteMovie(movie.imdbID);
+        } else {
+            addFavoriteMovie(movie);
+        }
     }
 
     return (
@@ -64,11 +49,8 @@ const MovieDetailPage = () => {
                             className={cn(movieDetailStyles.container)}>
                     {movie?.Title}
 
-                    <div onClick={handleFavoriteAction}
-                         style={{cursor: "pointer", width: "fit-content", margin: "auto 1rem auto 0",}}>
-
+                    <div onClick={handleFavoriteAction} className={movieDetailStyles.favoriteAction}>
                         {isFavorite ? <StarIcon sx={sx}/> : <StarBorderIcon sx={sx}/>}
-
                     </div>
                 </Typography>
 
@@ -86,12 +68,7 @@ const MovieDetailPage = () => {
                     </div>
                     <div>
                         <Typography>
-                            <span style={{
-                                background: "green",
-                                padding: "0.25rem",
-                                textAlign: "center",
-                                borderRadius: "4px"
-                            }}>{movie?.Metascore}</span>&nbsp;Metascore
+                            <span className={movieDetailStyles.metaScore}>{movie?.Metascore}</span>&nbsp;Metascore
                         </Typography>
                     </div>
                 </div>
@@ -137,17 +114,12 @@ const MovieDetailPage = () => {
                             Other Ratings
                         </Typography>
                         <div className={cn(movieDetailStyles.container)}>
-
-
                             <table>
                                 <tbody>
-
                                 {movie?.Ratings.map((rating) => (
                                     <tr key={rating.Value}>
                                         <td><Typography>{rating.Source}</Typography></td>
-                                        <td><Typography
-                                            sx={{fontWeight: "600", color: "#fff"}}>{rating.Value}</Typography>
-                                        </td>
+                                        <td><Typography>{rating.Value}</Typography></td>
                                     </tr>
                                 ))}
                                 </tbody>
@@ -163,30 +135,26 @@ const MovieDetailPage = () => {
                         <tbody>
                         <tr>
                             <td><Typography>Release date</Typography></td>
-                            <td><Typography
-                                sx={{fontWeight: "600", color: "#fff"}}>{movie?.Released}</Typography>
+                            <td><Typography>{movie?.Released}</Typography>
                             </td>
                         </tr>
                         <tr>
                             <td><Typography>Country</Typography></td>
-                            <td><Typography sx={{fontWeight: "600", color: "#fff"}}>{movie?.Country}</Typography>
+                            <td><Typography>{movie?.Country}</Typography>
                             </td>
                         </tr>
                         <tr>
                             <td><Typography>Language</Typography></td>
-                            <td><Typography
-                                sx={{fontWeight: "600", color: "#fff"}}>{movie?.Language}</Typography>
+                            <td><Typography>{movie?.Language}</Typography>
                             </td>
                         </tr>
                         {movie?.DVD && <tr>
                             <td><Typography>DVD</Typography></td>
-                            <td><Typography sx={{fontWeight: "600", color: "#fff"}}>{movie?.DVD}</Typography>
-                            </td>
+                            <td><Typography>{movie?.DVD}</Typography></td>
                         </tr>}
                         {movie?.BoxOffice && <tr>
                             <td><Typography>Box office</Typography></td>
-                            <td><Typography
-                                sx={{fontWeight: "600", color: "#fff"}}>{movie?.BoxOffice}</Typography>
+                            <td><Typography>{movie?.BoxOffice}</Typography>
                             </td>
                         </tr>}
                         </tbody>

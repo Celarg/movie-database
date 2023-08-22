@@ -1,16 +1,16 @@
-import {useMovieSearch} from "@/lib/queries/movie-search.ts";
-import {Alert, CircularProgress, InputAdornment, Pagination, Skeleton, TextField} from "@mui/material";
+import {useMovieSearch} from "@/lib/queries";
+import {Alert, CircularProgress, InputAdornment, Pagination, Skeleton, TextField, Typography} from "@mui/material";
 import pageStyles from './styles/page.module.scss'
 import {cn} from "@/lib/helpers";
 import SearchIcon from '@mui/icons-material/Search';
 import {Outlet, useNavigate} from "react-router-dom";
 import {MovieCard} from "@/src/movie-search/components";
-import {usePageContext} from "@/lib/state/page-provider.tsx";
+import {usePageContext} from "@/lib/context";
 import {useMemo} from "react";
 import {ROUTES} from "@/lib/constants";
 
 const MovieSearchPage = () => {
-    const {search,setSearch, setPage, page, debouncedSearch} = usePageContext()
+    const {search, setSearch, setPage, page, debouncedSearch} = usePageContext()
     const navigate = useNavigate();
 
     const searchMoviesQuery = useMovieSearch({query: debouncedSearch, page});
@@ -23,24 +23,42 @@ const MovieSearchPage = () => {
 
     return (
         <>
-            <main className='container' style={{position: "relative", marginTop: "1rem"}}>
-                <TextField
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                {((searchMoviesQuery.isLoading || searchMoviesQuery.isFetching) && !!search) ?
-                                    <CircularProgress size={18}/> : <SearchIcon/>}
-                            </InputAdornment>
-                        )
-                    }}
-                    data-empty={!debouncedSearch} className={cn(pageStyles.searchInput)} id="outlined-basic"
-                    label="Search movie..." variant="outlined" value={search}
-                    onChange={e => setSearch(e.target.value)}
-                />
-                <button onClick={()=>navigate('/favorites')}>
-                    Favorites
-                </button>
+            <main className={cn('container', pageStyles.main)} >
+                <div className={pageStyles.header}>
 
+                    <TextField
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    {((searchMoviesQuery.isLoading || searchMoviesQuery.isFetching) && !!search) ?
+                                        <CircularProgress size={18}/> : <SearchIcon/>}
+                                </InputAdornment>
+                            )
+                        }}
+                        data-empty={!debouncedSearch}
+                        className={cn(pageStyles.searchInput)}
+                        sx={{
+                            '&:focus-within': {
+                                width: '25rem', // Change the width to your desired value
+                                // You can add more style properties here for other changes on focus-within
+                            },
+                        }}
+                        id="outlined-basic"
+                        label="Search movie..." variant="outlined" value={search}
+                        onChange={e => setSearch(e.target.value)}
+                    />
+                    <Typography variant={"h5"} style={{color: 'white'}}
+                                sx={{fontWeight: "semibold", letterSpacing: "2px", cursor: "pointer", textAlign:"right"}}
+                                onClick={() => navigate('/favorites')}>
+                        Favorite Movies
+                    </Typography>
+                </div>
+                <Typography sx={{color: "white", textAlign:"center", margin:!!debouncedSearch ? "0" : "auto", paddingTop:"3rem"}} variant={"h2"}>
+                    Movie Database
+                    <span style={{display: "block", color: "rgba(255,255,255,0.68)", fontSize: "1.5rem"}}>
+                         made by @Celarg
+                    </span>
+                </Typography>
                 <section className={cn(pageStyles.movieContainer)}>
                     {(!!debouncedSearch && searchMoviesQuery.isSuccess) && searchMoviesQuery.data.data.Search?.map((movie) => (
                         <MovieCard movie={movie} onClick={(movie) => handleMovieCardClick(movie.imdbID)}
@@ -49,15 +67,7 @@ const MovieSearchPage = () => {
                     {(searchMoviesQuery.isLoading && !!debouncedSearch) && Array.from({length: 9}).map((_, index) => (
                         <div style={{position: "relative"}} key={index}>
                             <Skeleton variant="rectangular" width={'100%'} height={234}/>
-                            <div style={{
-                                zIndex: 10,
-                                position: "absolute",
-                                display: "flex",
-                                width: "100%",
-                                top: 0,
-                                bottom: 0,
-                                margin: "auto 0"
-                            }}>
+                            <div className={pageStyles.skeletonDiv}>
                                 <Skeleton
                                     variant="rectangular"
                                     animation="wave"
@@ -88,13 +98,12 @@ const MovieSearchPage = () => {
                     ))}
 
                 </section>
-                <div style={{display: "flex", justifyContent: "center", paddingTop: "1rem"}}>
+                {parseInt(searchMoviesQuery.data?.data?.totalResults || '0') > 0 && <div style={{display: "flex", justifyContent: "center", paddingTop: "1rem", marginTop:"auto"}}>
 
-                    {parseInt(searchMoviesQuery.data?.data?.totalResults || '0')>0 &&
                         <Pagination count={Math.ceil(parseInt(searchMoviesQuery.data?.data.totalResults || '1') / 10)}
                                     color="primary" page={page} onChange={(_, page) => setPage(page)}/>
-                    }
-                </div>
+
+                </div>}
 
                 {!!error && <Alert severity="error" variant={"filled"} sx={{width: "320px", margin: "10rem auto"}}>
                     {error}
