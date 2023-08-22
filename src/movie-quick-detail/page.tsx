@@ -82,7 +82,7 @@ const MovieDetailPage = () => {
                 <Typography variant={'h5'}>
                     Genres
                 </Typography>
-                <div className={cn(movieDetailStyles.genreContainer, movieDetailStyles.container)}>
+                <div className={cn( movieDetailStyles.container, movieDetailStyles.genreContainer,)}>
                     {movie?.Genre.split(',').map((genre, index) => (
                         <Chip key={index} label={genre} sx={{width: "fit-content", padding: "1rem 0"}}/>
                     ))}
